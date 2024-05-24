@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Registros del Laboratorio - SoC UAI</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <div id="particles-js"></div>
+    <h1>Registros del Laboratorio</h1>
+    <table>
+      <tr>
+        <th>Nombre</th>
+        <th>Acción</th>
+        <th>Fecha y Hora</th>
+      </tr>
+      {% for registro in registros %}
+      <tr>
+        <td>{{ registro['nombre'] }}</td>
+        <td>{{ registro['accion'] }}</td>
+        <td>{{ registro['tiempo'] }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    <a href="/">Volver</a>
+    <script src="{{ url_for('static', filename='js/particles.min.js') }}"></script>
+    <script>
+      particlesJS.load(
+        "particles-js",
+        "{{ url_for('static', filename='js/particles-config.json') }}",
+        function () {
+          console.log("particles.js config loaded");
+        }
+      );
+    </script>
+  </body>
+</html>
