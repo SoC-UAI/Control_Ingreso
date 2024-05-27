@@ -20,7 +20,7 @@ else:
     registros = []
 
 # Contraseña predefinida
-password = "PASSWORD"
+password = str("PASSWORD")
 
 
 def registrar_entrada_salida(nombre, accion):
@@ -42,7 +42,7 @@ def login():
     if request.method == "POST":
         nombre = request.form["nombre"]
         accion = request.form["accion"]
-        input_password = request.form["password"]
+        input_password = str(request.form["password"])
 
         if input_password == password:
             registrar_entrada_salida(nombre, accion)
