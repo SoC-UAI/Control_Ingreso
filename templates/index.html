@@ -2,45 +2,57 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Laboratorio Registro</title>
+    <title>Security Lab - Informática UAI</title>
     <link
       rel="stylesheet"
       type="text/css"
       href="{{ url_for('static', filename='styles.css') }}"
     />
+    <script>
+      function fetchEstudiantes() {
+        fetch("/estudiantes")
+          .then((response) => response.json())
+          .then((data) => {
+            const estudiantesList = document.getElementById("estudiantes-list");
+            estudiantesList.innerHTML = "";
+            data.estudiantes.forEach((estudiante) => {
+              const li = document.createElement("li");
+              li.textContent = estudiante;
+              estudiantesList.appendChild(li);
+            });
+          });
+      }
+
+      // Actualizar la lista de estudiantes cada 30 segundos
+      setInterval(fetchEstudiantes, 30000);
+
+      // Actualizar la lista de estudiantes cuando la página se carga
+      window.onload = fetchEstudiantes;
+    </script>
   </head>
   <body>
-    <h1>Registrar Entrada o Salida</h1>
-    <form action="/validate" method="post">
-      <label for="nombre">Seleccione un nombre:</label>
-      <select name="nombre" id="nombre">
-        {% for nombre in nombres %}
-        <option value="{{ nombre }}">{{ nombre }}</option>
-        {% endfor %}
-      </select>
-      <label for="accion">Seleccione una acción:</label>
-      <select name="accion" id="accion">
-        <option value="entrado">Entrada</option>
-        <option value="salido">Salida</option>
-      </select>
-      <label for="password">Contraseña:</label>
-      <input type="password" name="password" id="password" required />
-      <button type="submit">Registrar</button>
-    </form>
+    <div id="particles-js"></div>
+    <h1>Security Lab - Informática UAI</h1>
+    <div class="container">
+      <h2>Estudiantes en el Laboratorio</h2>
+      <ul id="estudiantes-list">
+        <!-- La lista de estudiantes se llenará aquí -->
+      </ul>
+      <div class="qr-code">
+        <h3>Formulario de Entrada/Salida</h3>
+        <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" />
+      </div>
+    </div>
 
-    <h1>Mostrar Registros</h1>
-    <form action="/records" method="post">
-      <label for="password">Contraseña:</label>
-      <input type="password" name="password" id="password" required />
-      <button type="submit">Mostrar Registros</button>
-    </form>
-
-    {% with messages = get_flashed_messages() %} {% if messages %}
-    <ul>
-      {% for message in messages %}
-      <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %} {% endwith %}
+    <script src="{{ url_for('static', filename='js/particles.min.js') }}"></script>
+    <script>
+      particlesJS.load(
+        "particles-js",
+        "{{ url_for('static', filename='js/particles-config.json') }}",
+        function () {
+          console.log("particles.js config loaded");
+        }
+      );
+    </script>
   </body>
 </html>

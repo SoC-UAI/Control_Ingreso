@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+env/
+control-acceso-security-lab-1137638840bd.json
