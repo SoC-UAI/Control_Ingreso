@@ -54,22 +54,22 @@ def obtener_datos_hoja():
     nuevos_estudiantes_dentro = set()
 
     for nombre, info in estados_estudiantes.items():
-        print(f"{nombre}: {info['accion']}")
+        # print(f"{nombre}: {info['accion']}")
         if info["accion"] == "entrada":
             nuevos_estudiantes_dentro.add(nombre)
-            print(f"Estudiante {nombre} entró")
+            # print(f"Estudiante {nombre} entró")
         elif info["accion"] == "salida":
             nuevos_estudiantes_dentro.discard(nombre)
-            print(f"Estudiante {nombre} salió")
+            # print(f"Estudiante {nombre} salió")
 
-    print(f"Estudiantes dentro: {nuevos_estudiantes_dentro}")
+    # print(f"Estudiantes dentro: {nuevos_estudiantes_dentro}")
     estudiantes_dentro = list(nuevos_estudiantes_dentro)
 
 
 def actualizar_estudiantes():
     while True:
         obtener_datos_hoja()
-        time.sleep(30)
+        time.sleep(10)
 
 
 def generar_codigo_qr(url):
@@ -104,4 +104,4 @@ def estudiantes():
 if __name__ == "__main__":
     # Iniciar el hilo de actualización
     threading.Thread(target=actualizar_estudiantes, daemon=True).start()
-    app.run(host="0.0.0.0", port=5001, debug=True, use_reloader=False)
+    app.run(host="0.0.0.0", port=5001, debug=True)
