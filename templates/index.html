@@ -15,16 +15,24 @@
           .then((data) => {
             const estudiantesList = document.getElementById("estudiantes-list");
             estudiantesList.innerHTML = "";
-            data.estudiantes.forEach((estudiante) => {
+
+            if (data.estudiantes.length === 0) {
               const li = document.createElement("li");
-              li.textContent = estudiante;
+              li.className = "no-estudiantes"; // Aplica la nueva clase
+              li.textContent = "No hay estudiantes en el laboratorio";
               estudiantesList.appendChild(li);
-            });
+            } else {
+              data.estudiantes.forEach((estudiante) => {
+                const li = document.createElement("li");
+                li.textContent = estudiante;
+                estudiantesList.appendChild(li);
+              });
+            }
           });
       }
 
-      // Actualizar la lista de estudiantes cada 10 segundos
-      setInterval(fetchEstudiantes, 10000);
+      // Actualizar la lista de estudiantes cada 30 segundos
+      setInterval(fetchEstudiantes, 30000);
 
       // Actualizar la lista de estudiantes cuando la página se carga
       window.onload = fetchEstudiantes;
@@ -32,15 +40,19 @@
   </head>
   <body>
     <div id="particles-js"></div>
-    <h1>Security Lab - Informática UAI</h1>
-    <div class="container">
-      <h2>Estudiantes en el Laboratorio</h2>
-      <ul id="estudiantes-list">
-        <!-- La lista de estudiantes se llenará aquí -->
-      </ul>
-      <div class="qr-code">
-        <h3>Formulario de Entrada/Salida</h3>
-        <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" />
+    <div class="content">
+      <h1>Security Lab - Informática UAI</h1>
+      <div class="container">
+        <h2>Estudiantes en el Laboratorio</h2>
+        <div class="table-container">
+          <ul id="estudiantes-list">
+            <!-- La lista de estudiantes se llenará aquí -->
+          </ul>
+        </div>
+        <div class="qr-code">
+          <h3>Formulario de Entrada/Salida</h3>
+          <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" />
+        </div>
       </div>
     </div>
 

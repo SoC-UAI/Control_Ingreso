@@ -121,7 +121,7 @@ ul {
 
 li {
   padding: 10px;
-  background-color: #ff4444;
+  background-color: #f3901f;
   color: white;
   margin-bottom: 10px;
   border-radius: 4px;
@@ -144,17 +144,32 @@ li {
 
 .qr-code {
   text-align: center;
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 .qr-code img {
   width: 300px; /* Aumentado desde 200px */
   height: 300px; /* Aumentado desde 200px */
-  border-radius: 15px;
+  border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out;
 }
 
 .qr-code img:hover {
   transform: scale(1.05);
+}
+
+.table-container {
+  max-height: 300px; /* Limita la altura de la tabla */
+  overflow-y: auto; /* Añade scroll vertical si es necesario */
+}
+
+.no-estudiantes {
+  width: 50%; /* Limita el ancho del mensaje */
+  margin: 0 auto;
+  padding: 10px;
+  background-color: #f3901f;
+  color: white;
+  border-radius: 4px;
+  text-align: center;
 }
