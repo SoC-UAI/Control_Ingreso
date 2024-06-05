@@ -64,6 +64,7 @@ def obtener_datos_hoja():
 
     # print(f"Estudiantes dentro: {nuevos_estudiantes_dentro}")
     estudiantes_dentro = list(nuevos_estudiantes_dentro)
+    print(f"Estudiantes dentro actualizados: {estudiantes_dentro}")  # Agregar registro
 
 
 def actualizar_estudiantes():
@@ -104,4 +105,4 @@ def estudiantes():
 if __name__ == "__main__":
     # Iniciar el hilo de actualización
     threading.Thread(target=actualizar_estudiantes, daemon=True).start()
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=False)
