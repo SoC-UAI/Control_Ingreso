@@ -2,7 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Security Lab - Informática UAI</title>
+    <title>SoC - Informática UAI</title>
     <link
       rel="stylesheet"
       type="text/css"
@@ -18,7 +18,7 @@
 
             if (data.estudiantes.length === 0) {
               const li = document.createElement("li");
-              li.className = "no-estudiantes"; // Aplica la nueva clase
+              li.className = "no-estudiantes";
               li.textContent = "No hay estudiantes en el laboratorio";
               estudiantesList.appendChild(li);
             } else {
@@ -31,8 +31,8 @@
           });
       }
 
-      // Actualizar la lista de estudiantes cada 3 segundos
-      setInterval(fetchEstudiantes, 3000);
+      // Actualizar la lista de estudiantes cada 10 segundos
+      setInterval(fetchEstudiantes, 10000);
 
       // Actualizar la lista de estudiantes cuando la página se carga
       window.onload = fetchEstudiantes;
@@ -41,17 +41,21 @@
   <body>
     <div id="particles-js"></div>
     <div class="content">
-      <h1>Security Lab - Informática UAI</h1>
+      <h1>SoC - Informática UAI</h1>
       <div class="container">
-        <h2>Estudiantes en el Laboratorio</h2>
-        <div class="table-container">
-          <ul id="estudiantes-list">
-            <!-- La lista de estudiantes se llenará aquí -->
-          </ul>
+        <div class="left">
+          <h2>Estudiantes en el Laboratorio</h2>
+          <div class="table-container">
+            <ul id="estudiantes-list">
+              <!-- La lista de estudiantes se llenará aquí -->
+            </ul>
+          </div>
         </div>
-        <div class="qr-code">
+        <div class="right">
           <h3>Formulario de Entrada/Salida</h3>
-          <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" />
+          <div class="qr-code">
+            <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" />
+          </div>
         </div>
       </div>
     </div>
