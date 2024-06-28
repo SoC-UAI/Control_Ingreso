@@ -399,6 +399,7 @@ FodyWeavers.xsd
 
 env/
 control-acceso-security-lab-1137638840bd.json
+fondo_solo/
 
 #macOS
 .DS_Store
