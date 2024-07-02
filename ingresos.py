@@ -1,108 +1,95 @@
-from flask import Flask, render_template, jsonify
-import qrcode
-from io import BytesIO
-import base64
-from googleapiclient.discovery import build
-from google.oauth2.service_account import Credentials
-import datetime
-import threading
-import time
+from flask import Flask, render_template, request, redirect, url_for
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+from datetime import datetime
+import logging
 
 app = Flask(__name__)
 
-# Configuración de la API de Google Sheets
-SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
-SPREADSHEET_ID = "1ehbF7VtwdYyA57CSRqbRQUzYQrtQ6tckkX0-P0vGzHE"
-RANGE_NAME = "A2:D"  # Ajusta esto según la estructura de tu hoja de cálculo
-
-# Ruta del archivo de credenciales
-CREDENTIALS_FILE = "control-acceso-security-lab-1137638840bd.json"
-
-# Lista global de estudiantes dentro
-estudiantes_dentro = []
-
-
-def obtener_datos_hoja():
-    creds = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=SCOPES)
-    service = build("sheets", "v4", credentials=creds)
-    sheet = service.spreadsheets()
-    result = (
-        sheet.values().get(spreadsheetId=SPREADSHEET_ID, range=RANGE_NAME).execute()
-    )
-    values = result.get("values", [])
-
-    # Diccionario para almacenar la última acción de cada estudiante
-    estados_estudiantes = {}
-    for fila in values:
-        if len(fila) >= 4:  # Asegurarse de que hay al menos 4 columnas
-            timestamp_str = fila[0].strip()  # Marca de tiempo en la columna A
-            nombre = fila[1].strip()  # Nombre completo en la columna B
-            accion = fila[3].strip().lower()  # Acción en la columna D
-
-            # Convertir la marca de tiempo a un objeto datetime para comparación
-            timestamp = datetime.datetime.strptime(timestamp_str, "%d/%m/%Y %H:%M:%S")
-
-            # Actualizar el estado del estudiante solo si es el último registro
-            if (
-                nombre not in estados_estudiantes
-                or estados_estudiantes[nombre]["timestamp"] < timestamp
-            ):
-                estados_estudiantes[nombre] = {"timestamp": timestamp, "accion": accion}
-
-    # Actualizar la lista global de estudiantes dentro
-    global estudiantes_dentro
-    nuevos_estudiantes_dentro = set()
-
-    for nombre, info in estados_estudiantes.items():
-        # print(f"{nombre}: {info['accion']}")
-        if info["accion"] == "entrada":
-            nuevos_estudiantes_dentro.add(nombre)
-            # print(f"Estudiante {nombre} entró")
-        elif info["accion"] == "salida":
-            nuevos_estudiantes_dentro.discard(nombre)
-            # print(f"Estudiante {nombre} salió")
-
-    # print(f"Estudiantes dentro: {nuevos_estudiantes_dentro}")
-    estudiantes_dentro = list(nuevos_estudiantes_dentro)
-    print(f"Estudiantes dentro actualizados: {estudiantes_dentro}")  # Agregar registro
-
-
-def actualizar_estudiantes():
-    while True:
-        obtener_datos_hoja()
-        time.sleep(10)
-
-
-def generar_codigo_qr(url):
-    qr = qrcode.QRCode(version=1, box_size=10, border=5)
-    qr.add_data(url)
-    qr.make(fit=True)
-    img = qr.make_image(fill="black", back_color="white")
-    buffered = BytesIO()
-    img.save(buffered, format="PNG")
-    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-    return img_str
+# Configuración de la conexión con Google Sheets
+scope = [
+    "https://spreadsheets.google.com/feeds",
+    "https://www.googleapis.com/auth/drive",
+]
+creds = ServiceAccountCredentials.from_json_keyfile_name(
+    "control-acceso-security-lab-1137638840bd.json", scope
+)
+client = gspread.authorize(creds)
+sheet = client.open("Control de Acesso Security Lab UAI").sheet1
 
 
 @app.route("/")
 def index():
-    global estudiantes_dentro
-
-    qr_url = "https://forms.gle/vqApAMVdtTF52hWL7"
-    qr_code = generar_codigo_qr(qr_url)
-
-    return render_template(
-        "index.html", estudiantes=estudiantes_dentro, qr_code=qr_code
-    )
+    return render_template("index.html")
 
 
-@app.route("/estudiantes")
-def estudiantes():
-    global estudiantes_dentro
-    return jsonify(estudiantes=estudiantes_dentro)
+@app.route("/entrada", methods=["GET", "POST"])
+def entrada():
+    if request.method == "POST":
+        nombre = request.form["nombre"]
+        correo = request.form["correo"]
+        timestamp = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        sheet.append_row(
+            [timestamp, nombre, correo, "Entrada"], value_input_option="RAW"
+        )
+        return redirect(url_for("index"))
+    return render_template("entrada.html")
+
+
+@app.route("/salida", methods=["GET", "POST"])
+def salida():
+    if request.method == "POST":
+        nombre = request.form["nombre"]
+        timestamp = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        sheet.append_row([timestamp, nombre, "", "Salida"], value_input_option="RAW")
+        return redirect(url_for("index"))
+
+    registros = sheet.get_all_records()
+
+    # Diccionario para almacenar la última acción de cada persona
+    estados_personas = {}
+    for registro in registros:
+        if len(registro) >= 4:  # Asegurarse de que hay al menos 4 columnas
+            timestamp_str = registro.get(
+                "Marca temporal", ""
+            ).strip()  # Marca de tiempo en la columna A
+            nombre = registro.get(
+                "Nombre completo", ""
+            ).strip()  # Nombre completo en la columna B
+            accion = (
+                registro.get("Acción", "").strip().lower()
+            )  # Acción en la columna D
+
+            if not timestamp_str or not nombre or not accion:
+                logging.warning(f"Registro inválido o incompleto: {registro}")
+                continue
+
+            try:
+                timestamp = datetime.strptime(timestamp_str, "%d/%m/%Y %H:%M:%S")
+            except ValueError as e:
+                logging.error(
+                    f"Formato de tiempo inválido: {timestamp_str}, error: {e}"
+                )
+                continue
+
+            # Actualizar el estado de la persona solo si es el último registro
+            if (
+                nombre not in estados_personas
+                or estados_personas[nombre]["timestamp"] < timestamp
+            ):
+                estados_personas[nombre] = {"timestamp": timestamp, "accion": accion}
+
+    # Lista de personas dentro del laboratorio
+    nombres_en_lab = set()
+
+    for nombre, info in estados_personas.items():
+        if info["accion"] == "entrada":
+            nombres_en_lab.add(nombre)
+        elif info["accion"] == "salida":
+            nombres_en_lab.discard(nombre)
+
+    return render_template("salida.html", nombres=nombres_en_lab)
 
 
 if __name__ == "__main__":
-    # Iniciar el hilo de actualización
-    threading.Thread(target=actualizar_estudiantes, daemon=True).start()
-    app.run(host="0.0.0.0", port=5001, debug=False)
+    app.run(debug=True)

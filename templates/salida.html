@@ -1,0 +1,16 @@
+{% extends "base.html" %} {% block title %}Registro de Salida{% endblock %} {%
+block content %}
+<h1>Registro de Salida</h1>
+<form method="POST">
+  <div class="form-group">
+    <label for="nombre">Selecciona tu nombre</label>
+    <select class="form-control" id="nombre" name="nombre" required>
+      {% for nombre in nombres %}
+      <option value="{{ nombre }}">{{ nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button type="submit" class="btn btn-danger">Registrar Salida</button>
+</form>
+<a href="{{ url_for('index') }}" class="btn btn-secondary">Volver</a>
+{% endblock %}
