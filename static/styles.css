@@ -100,3 +100,13 @@ ul li {
   background: linear-gradient(to right, #004e92, #000428);
   z-index: -1;
 }
+
+#current-time {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 40px; /* Increase this value for a larger font size */
+  z-index: 1000;
+}

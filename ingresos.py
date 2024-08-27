@@ -1,6 +1,8 @@
 from flask import Flask, render_template, jsonify
 import qrcode
 from io import BytesIO
+import io
+from PIL import Image
 import base64
 from googleapiclient.discovery import build
 from google.oauth2.service_account import Credentials
@@ -73,22 +75,34 @@ def actualizar_estudiantes():
         time.sleep(10)
 
 
-def generar_codigo_qr(url):
-    qr = qrcode.QRCode(version=1, box_size=10, border=5)
-    qr.add_data(url)
+def generar_codigo_qr(qr_url):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(qr_url)
     qr.make(fit=True)
+
     img = qr.make_image(fill="black", back_color="white")
-    buffered = BytesIO()
+
+    # Save the image to a BytesIO buffer
+    buffered = io.BytesIO()
     img.save(buffered, format="PNG")
-    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-    return img_str
+    buffered.seek(0)
+
+    # Convert to base64
+    img_base64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
+
+    return img_base64
 
 
 @app.route("/")
 def index():
     global estudiantes_dentro
 
-    qr_url = "https://forms.gle/vqApAMVdtTF52hWL7"
+    qr_url = "https://sebadinator.pythonanywhere.com/"
     qr_code = generar_codigo_qr(qr_url)
 
     return render_template(

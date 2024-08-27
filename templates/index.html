@@ -2,6 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="600" />
     <title>Security Lab - Informática UAI</title>
     <link
       rel="stylesheet"
@@ -70,5 +71,23 @@
         }
       );
     </script>
+    <script>
+      function updateTime() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const seconds = String(now.getSeconds()).padStart(2, "0");
+        const currentTime = `${hours}:${minutes}:${seconds}`;
+
+        document.getElementById("current-time").textContent = currentTime;
+      }
+
+      // Update the time every second
+      setInterval(updateTime, 1000);
+
+      // Set the initial time
+      updateTime();
+    </script>
+    <div id="current-time"></div>
   </body>
 </html>

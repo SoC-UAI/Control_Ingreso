@@ -398,10 +398,12 @@ FodyWeavers.xsd
 *.sln.iml
 
 env/
+.venv/
 control-acceso-security-lab-1137638840bd.json
 fondo_solo/
 Control_Microsoft/
 V2/
+PuntosRed_SoC.pdf
 
 #macOS
 .DS_Store
