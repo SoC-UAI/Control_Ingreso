@@ -10,6 +10,9 @@
       href="{{ url_for('static', filename='styles.css') }}"
     />
     <script>
+      // List of tutors
+      const tutors = ["Sebastián Dinator", "Bruno Reyes"];
+
       function fetchEstudiantes() {
         fetch("/estudiantes")
           .then((response) => response.json())
@@ -26,6 +29,14 @@
               data.estudiantes.forEach((estudiante) => {
                 const li = document.createElement("li");
                 li.textContent = estudiante;
+
+                // Check if the student is a tutor
+                if (tutors.includes(estudiante)) {
+                  li.className = "tutor"; // Apply tutor class
+                } else {
+                  li.className = "student"; // Apply student class
+                }
+
                 estudiantesList.appendChild(li);
               });
             }

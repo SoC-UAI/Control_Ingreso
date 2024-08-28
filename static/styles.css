@@ -61,11 +61,20 @@ ul {
 
 ul li {
   padding: 10px;
-  background-color: #f3901f; /* Color naranjo */
-  color: white;
   margin-bottom: 10px;
   border-radius: 4px;
   text-align: center;
+  color: white;
+}
+
+/* Style for tutors */
+.tutor {
+  background-color: #f3901f; /* Orange color for tutors */
+}
+
+/* Style for regular students */
+.student {
+  background-color: green; /* Green color for other students */
 }
 
 .qr-code {
