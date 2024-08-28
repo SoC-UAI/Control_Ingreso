@@ -9,11 +9,12 @@ from google.oauth2.service_account import Credentials
 import datetime
 import threading
 import time
+import schedule
 
 app = Flask(__name__)
 
 # Configuración de la API de Google Sheets
-SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SPREADSHEET_ID = "1ehbF7VtwdYyA57CSRqbRQUzYQrtQ6tckkX0-P0vGzHE"
 RANGE_NAME = "A2:D"  # Ajusta esto según la estructura de tu hoja de cálculo
 
@@ -56,17 +57,13 @@ def obtener_datos_hoja():
     nuevos_estudiantes_dentro = set()
 
     for nombre, info in estados_estudiantes.items():
-        # print(f"{nombre}: {info['accion']}")
         if info["accion"] == "entrada":
             nuevos_estudiantes_dentro.add(nombre)
-            # print(f"Estudiante {nombre} entró")
         elif info["accion"] == "salida":
             nuevos_estudiantes_dentro.discard(nombre)
-            # print(f"Estudiante {nombre} salió")
 
-    # print(f"Estudiantes dentro: {nuevos_estudiantes_dentro}")
     estudiantes_dentro = list(nuevos_estudiantes_dentro)
-    print(f"Estudiantes dentro actualizados: {estudiantes_dentro}")  # Agregar registro
+    print(f"Estudiantes dentro actualizados: {estudiantes_dentro}")
 
 
 def actualizar_estudiantes():
@@ -98,6 +95,43 @@ def generar_codigo_qr(qr_url):
     return img_base64
 
 
+def logout_all_students():
+    """Automatically log out all students at 20:00 every day."""
+    global estudiantes_dentro
+
+    # Mark all students as "Salida"
+    creds = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=SCOPES)
+    service = build("sheets", "v4", credentials=creds)
+    sheet = service.spreadsheets()
+
+    now = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+
+    for nombre in estudiantes_dentro:
+        # Create the new row data for "Salida"
+        new_row = [[now, nombre, "", "Salida"]]
+
+        # Append the new row to the Google Sheet
+        sheet.values().append(
+            spreadsheetId=SPREADSHEET_ID,
+            range=RANGE_NAME,
+            valueInputOption="USER_ENTERED",
+            body={"values": new_row},
+        ).execute()
+
+    # Clear the list to log out all students locally
+    estudiantes_dentro.clear()
+    print("Todos los estudiantes han sido desconectados automáticamente a las 20:00.")
+
+
+def schedule_tasks():
+    """Schedule the daily logout task."""
+    schedule.every().day.at("20:00").do(logout_all_students)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+
 @app.route("/")
 def index():
     global estudiantes_dentro
@@ -117,6 +151,7 @@ def estudiantes():
 
 
 if __name__ == "__main__":
-    # Iniciar el hilo de actualización
+    # Iniciar los hilos de actualización y programación
     threading.Thread(target=actualizar_estudiantes, daemon=True).start()
+    threading.Thread(target=schedule_tasks, daemon=True).start()
     app.run(host="0.0.0.0", port=5001, debug=False)
