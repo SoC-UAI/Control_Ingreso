@@ -142,7 +142,7 @@ def schedule_tasks():
 def index():
     global estudiantes_dentro
 
-    qr_url = "https://sebadinator.pythonanywhere.com/"
+    qr_url = "https://socuai.pythonanywhere.com/"
     qr_code = generar_codigo_qr(qr_url)
 
     return render_template(
