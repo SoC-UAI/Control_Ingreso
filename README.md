@@ -77,22 +77,6 @@ after cloning the project.
 
 5. **Display Configuration**: Set up the Raspberry Pi to automatically open a browser in fullscreen mode to `http://localhost:5001` upon boot. This ensures the student presence screen is always visible.
 
-## Usage
-
-1. **Student Entry/Exit**: Students use the QR code displayed on the TV screen to access the form [`login.html`](login.html). They must select their name, action (entry or exit), and provide the password to confirm their entry or exit.
-
-2. **Viewing Records**: Administrators can view the complete list of attendance records [`records.html`](records.html) by entering an administrative password.
-
-## File Descriptions
-
-- **`index.html`**: Displays the current students in the lab along with a QR code for easy login/logout.
-- **`login.html`**: Form for students to log in or out. Password-protected.
-- **`records.html`**: Displays all attendance records. Password-protected for admin use.
-- **`home.html`**: Homepage providing access to login/logout and records viewing.
-- **`xxxxxxxx-yyyyyyyyyy.json`**: Service account credentials for Google API access.
-- **`registros.json`**: Contains attendance records, including the name, action, and timestamp.
-- **`requirements.txt`**: Lists all necessary packages for the application.
-
 ### Web Setup
 
 For the public web section of this app, the site was deployed to [PythonAnywhere](https://www.pythonanywhere.com/) since it fits the needs of this project. You can choose any host you like, but these instructions are based on this platform and no other is mantained here at the moment.
@@ -111,7 +95,23 @@ For the public web section of this app, the site was deployed to [PythonAnywhere
 
 4. Go to the Web tab again, enable `Force HTTPS` under the Security section, and restart the app.
 
-5. You are now good to go! By default, your site is live at `https://<your_username>.pythonanywhere.com/`.
+5. You are now good to go! By default, your site is live at `https://<your_username>.pythonanywhere.com/`. **Be sure to update the URL for the QR code generated at [`ingresos.py`](ingresos.py)!**
+
+## Usage
+
+1. **Student Entry/Exit**: Students use the QR code displayed on the TV screen to access the form [`login.html`](login.html). They must select their name, action (entry or exit), and provide the password to confirm their entry or exit.
+
+2. **Viewing Records**: Administrators can view the complete list of attendance records [`records.html`](records.html) by entering an administrative password.
+
+## File Descriptions
+
+- **`index.html`**: Displays the current students in the lab along with a QR code for easy login/logout.
+- **`login.html`**: Form for students to log in or out. Password-protected.
+- **`records.html`**: Displays all attendance records. Password-protected for admin use.
+- **`home.html`**: Homepage providing access to login/logout and records viewing.
+- **`xxxxxxxx-yyyyyyyyyy.json`**: Service account credentials for Google API access.
+- **`registros.json`**: Contains attendance records, including the name, action, and timestamp.
+- **`requirements.txt`**: Lists all necessary packages for the application.
 
 ## Development Notes
 
