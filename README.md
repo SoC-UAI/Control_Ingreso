@@ -65,7 +65,7 @@ after cloning the project.
    cd <repository-folder>
    ```
 
-3. **Environment Variables**: Create a `.env` file for Google API credentials and set up the necessary environmental variables, such as `CLIENT_ID`, `CLIENT_SECRET`, etc. Use the `xxxxxxxx-yyyyyyyyyy.json` for the appropriate service account credentials. The should be generated using [Google Cloud Platform](https://console.cloud.google.com/).
+3. **Environment Variables**: Create a `.env` file for Google API credentials and set up the necessary environmental variables, such as `CLIENT_ID`, `CLIENT_SECRET`, etc. Use the `xxxxxxxx-yyyyyyyyyy.json` for the appropriate service account credentials. These should be generated using [Google Cloud Platform](https://console.cloud.google.com/).
 
 4. **Running the Application**: Start the Flask server:
 
@@ -101,7 +101,7 @@ For the public web section of this app, the site was deployed to [PythonAnywhere
 
 1. **Student Entry/Exit**: Students use the QR code displayed on the TV screen to access the form [`login.html`](login.html). They must select their name, action (entry or exit), and provide the password to confirm their entry or exit.
 
-2. **Viewing Records**: Administrators can view the complete list of attendance records [`records.html`](records.html) by entering an administrative password.
+2. **Viewing Records**: Administrators can view the complete list of attendance records by entering to the spreadsheet configured.
 
 ## File Descriptions
 
