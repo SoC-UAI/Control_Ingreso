@@ -14,21 +14,21 @@ import schedule
 from dotenv import load_dotenv
 import os
 
-# Cargar las variables desde el archivo .env
+# Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
 
-# Configuración de la API de Google Sheets
+# API configuration for Google Sheets
 SCOPES = [os.getenv("SCOPES")]
 SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
 RANGE_NAME = os.getenv("RANGE_NAME")
 CREDENTIALS_FILE = os.getenv("CREDENTIALS_FILE")
 
-# Lista global de estudiantes dentro
+# Global list to store the students inside
 estudiantes_dentro = []
 
-
+# Function to get the data from the Google Sheet
 def obtener_datos_hoja():
     creds = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=SCOPES)
     service = build("sheets", "v4", credentials=creds)
@@ -38,55 +38,56 @@ def obtener_datos_hoja():
     )
     values = result.get("values", [])
 
-    # Diccionario para almacenar la última acción de cada estudiante
+    # Dictionary to store the latest state of each student
     estados_estudiantes = {}
-    for fila in values:
-        if len(fila) >= 4:  # Asegurarse de que hay al menos 4 columnas
-            timestamp_str = fila[0].strip()  # Marca de tiempo en la columna A
-            nombre = fila[1].strip()  # Nombre completo en la columna B
-            accion = fila[3].strip().lower()  # Acción en la columna D
+    for fila in values: # These rows are specific to the Google Sheet used in this case - Modify as needed
+        if len(fila) >= 4:  # Make sure the row has at least 4 columns
+            timestamp_str = fila[0].strip()  # Timestamp in column A
+            nombre = fila[1].strip()  # Full name in column B
+            accion = fila[3].strip().lower()  # Action in column D
 
-            # Convertir la marca de tiempo a un objeto datetime para comparación
+            # Transform the timestamp string to a datetime object
             timestamp = datetime.datetime.strptime(timestamp_str, "%d/%m/%Y %H:%M:%S")
 
-            # Actualizar el estado del estudiante solo si es el último registro
+            # Update the student's state if the current action is more recent
             if (
                 nombre not in estados_estudiantes
                 or estados_estudiantes[nombre]["timestamp"] < timestamp
             ):
                 estados_estudiantes[nombre] = {"timestamp": timestamp, "accion": accion}
 
-    # Actualizar la lista global de estudiantes dentro
+    # Update the global list of students inside
     global estudiantes_dentro
     nuevos_estudiantes_dentro = set()
 
     for nombre, info in estados_estudiantes.items():
         if info["accion"] == "entrada":
-            nuevos_estudiantes_dentro.add(nombre)
+            nuevos_estudiantes_dentro.add(nombre) # Add the student to the set
         elif info["accion"] == "salida":
-            nuevos_estudiantes_dentro.discard(nombre)
+            nuevos_estudiantes_dentro.discard(nombre) # Remove the student from the set
 
     estudiantes_dentro = list(nuevos_estudiantes_dentro)
-    print(f"Estudiantes dentro actualizados: {estudiantes_dentro}")
+    print(f"Estudiantes dentro actualizados: {estudiantes_dentro}") # Print the updated list of students inside to the console for debugging purposes
 
 
+# Function to update the list of students inside every 10 seconds
 def actualizar_estudiantes():
     while True:
         obtener_datos_hoja()
         time.sleep(10)
 
-
+# Function to generate a QR code to display on the web page
 def generar_codigo_qr(qr_url):
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
+        box_size=10, # Change the box size to adjust the size of the QR code as needed
         border=4,
     )
     qr.add_data(qr_url)
     qr.make(fit=True)
 
-    img = qr.make_image(fill="black", back_color="white")
+    img = qr.make_image(fill="black", back_color="white") # Change the fill and back_color to adjust the colors of the QR code as needed
 
     # Save the image to a BytesIO buffer
     buffered = io.BytesIO()
@@ -98,12 +99,12 @@ def generar_codigo_qr(qr_url):
 
     return img_base64
 
-
-def logout_all_students(): #AL PARECER NO FUNCIONA
+# Function to log out all students at 20:00 every day - NOT WORKING YET!
+def logout_all_students():
     """Automatically log out all students at 20:00 every day."""
     global estudiantes_dentro
 
-    # Mark all students as "Salida"
+    # Mark all students as "Salida" (logout) in the Google Sheet
     creds = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=SCOPES)
     service = build("sheets", "v4", credentials=creds)
     sheet = service.spreadsheets()
@@ -126,7 +127,7 @@ def logout_all_students(): #AL PARECER NO FUNCIONA
     estudiantes_dentro.clear()
     print("Todos los estudiantes han sido desconectados automáticamente a las 20:00.")
 
-
+# Function to schedule the daily logout task
 def schedule_tasks():
     """Schedule the daily logout task."""
     schedule.every().day.at("20:00").do(logout_all_students)
@@ -136,6 +137,7 @@ def schedule_tasks():
         time.sleep(1)
 
 
+# Principal route to display the list of students inside and the QR code
 @app.route("/")
 def index():
     global estudiantes_dentro
@@ -155,7 +157,7 @@ def estudiantes():
 
 
 if __name__ == "__main__":
-    # Iniciar los hilos de actualización y programación
+    # Initialize the threads to update the list of students inside and schedule the daily logout task
     threading.Thread(target=actualizar_estudiantes, daemon=True).start()
     threading.Thread(target=schedule_tasks, daemon=True).start()
-    app.run(host="0.0.0.0", port=5001, debug=False)
+    app.run(host="0.0.0.0", port=5001, debug=False) # Change the port as needed
