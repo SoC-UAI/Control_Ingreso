@@ -1,3 +1,4 @@
+# Python 3.11.2
 from flask import Flask, render_template, jsonify
 import qrcode
 from io import BytesIO
@@ -95,7 +96,7 @@ def generar_codigo_qr(qr_url):
     return img_base64
 
 
-def logout_all_students():
+def logout_all_students(): #AL PARECER NO FUNCIONA
     """Automatically log out all students at 20:00 every day."""
     global estudiantes_dentro
 
