@@ -407,3 +407,6 @@ PuntosRed_SoC.pdf
 
 #macOS
 .DS_Store
+
+#Environment variables
+.env

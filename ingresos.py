@@ -11,16 +11,19 @@ import datetime
 import threading
 import time
 import schedule
+from dotenv import load_dotenv
+import os
+
+# Cargar las variables desde el archivo .env
+load_dotenv()
 
 app = Flask(__name__)
 
 # Configuración de la API de Google Sheets
-SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-SPREADSHEET_ID = "1ehbF7VtwdYyA57CSRqbRQUzYQrtQ6tckkX0-P0vGzHE"
-RANGE_NAME = "A2:D"  # Ajusta esto según la estructura de tu hoja de cálculo
-
-# Ruta del archivo de credenciales
-CREDENTIALS_FILE = "control-acceso-security-lab-1137638840bd.json"
+SCOPES = [os.getenv("SCOPES")]
+SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
+RANGE_NAME = os.getenv("RANGE_NAME")
+CREDENTIALS_FILE = os.getenv("CREDENTIALS_FILE")
 
 # Lista global de estudiantes dentro
 estudiantes_dentro = []
