@@ -54,6 +54,7 @@ pip install -r requirements.txt
 after cloning the project.
 
 ## Setup Instructions
+### Raspberry / TV Setup
 
 1. **Hardware Setup**: Connect a TV to the Raspberry Pi using an HDMI cable.
 
@@ -91,6 +92,26 @@ after cloning the project.
 - **`xxxxxxxx-yyyyyyyyyy.json`**: Service account credentials for Google API access.
 - **`registros.json`**: Contains attendance records, including the name, action, and timestamp.
 - **`requirements.txt`**: Lists all necessary packages for the application.
+
+### Web Setup
+
+For the public web section of this app, the site was deployed to [PythonAnywhere](https://www.pythonanywhere.com/) since it fits the needs of this project. You can choose any host you like, but these instructions are based on this platform and no other is mantained here at the moment.
+
+1. Create an account and create a Web App using `Flask`, `Python 3.10` and change the name of the main file of the app to `ingresos.py` when prompted.
+
+2. Go to the Files section, and inside the `mysite/` directory upload the contents inside the [`WEB`](/WEB/) folder. Be sure to mantain the order of the files, keeping the structure of the `static/` and `templates/` folders and it's contents.
+   Inside the `<your_username>/` folder, along with `mysite/` put the `xxxxxxxx-yyyyyyyyyy.json` file with the credentials for Google API.
+
+3. Open a Bash Console on PythonAnywhere, and install the requirement:
+
+   ```bash
+   pip install gspread
+   ```
+   Then make sure to close the console by typing `exit`.
+
+4. Go to the Web tab again, enable `Force HTTPS` under the Security section, and restart the app.
+
+5. You are now good to go! By default, your site is live at `https://<your_username>.pythonanywhere.com/`.
 
 ## Development Notes
 
