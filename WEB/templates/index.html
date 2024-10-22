@@ -1,0 +1,6 @@
+{% extends "base.html" %} {% block title %}Control de Acceso{% endblock %} {%
+block content %}
+<h1>Control de Acceso - Security Lab UAI</h1>
+<a href="{{ url_for('entrada') }}" class="btn btn-entrada btn-lg">Entrada</a>
+<a href="{{ url_for('salida') }}" class="btn btn-danger btn-lg">Salida</a>
+{% endblock %}
