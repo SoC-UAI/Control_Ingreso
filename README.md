@@ -24,10 +24,10 @@ The system aims to streamline the lab's attendance monitoring process, ensuring 
 
 - **Backend**: Powered by Flask, managing form submission, attendance updates, and data retrieval.
 - **Frontend**: HTML pages serve different purposes:
-  - [`index.html`](index.html): Main display page showing students present in the lab. Refreshes every 600 seconds.
-  - [`login.html`](login.html): Login/logout form for students to register their entry or exit.
-  - [`records.html`](records.html): Shows the full list of entries and exits for administrative purposes.
-  - [`home.html`](home.html): Acts as the homepage with navigation options for registering entry/exit and viewing records.
+  - [`index.html`](/templates/index.html): Main display page showing students present in the lab. Refreshes every 600 seconds.
+  - [`login.html`](/templates/login.html): Login/logout form for students to register their entry or exit.
+  - [`records.html`](/templates/records.html): Shows the full list of entries and exits for administrative purposes.
+  - [`home.html`](/templates/home.html): Acts as the homepage with navigation options for registering entry/exit and viewing records.
 
 ## Requirements
 
@@ -99,7 +99,7 @@ For the public web section of this app, the site was deployed to [PythonAnywhere
 
 ## Usage
 
-1. **Student Entry/Exit**: Students use the QR code displayed on the TV screen to access the form [`login.html`](login.html). They must select their name, action (entry or exit), and provide the password to confirm their entry or exit.
+1. **Student Entry/Exit**: Students use the QR code displayed on the TV screen to access the form [`login.html`](/templates/login.html). They must select their name, action (entry or exit), and provide the password to confirm their entry or exit.
 
 2. **Viewing Records**: Administrators can view the complete list of attendance records by entering to the spreadsheet configured.
 
