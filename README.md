@@ -24,10 +24,10 @@ The system aims to streamline the lab's attendance monitoring process, ensuring 
 
 - **Backend**: Powered by Flask, managing form submission, attendance updates, and data retrieval.
 - **Frontend**: HTML pages serve different purposes:
-  - [`index.html`](index.html): Main display page showing students present in the lab. Refreshes every 600 seconds.
-  - [`login.html`](login.html): Login/logout form for students to register their entry or exit.
-  - [`records.html`](records.html): Shows the full list of entries and exits for administrative purposes.
-  - [`home.html`](home.html): Acts as the homepage with navigation options for registering entry/exit and viewing records.
+  - [`index.html`](/templates/index.html): Main display page showing students present in the lab. Refreshes every 600 seconds.
+  - [`login.html`](/templates/login.html): Login/logout form for students to register their entry or exit.
+  - [`records.html`](/templates/records.html): Shows the full list of entries and exits for administrative purposes.
+  - [`home.html`](/templates/home.html): Acts as the homepage with navigation options for registering entry/exit and viewing records.
 
 ## Requirements
 
@@ -41,7 +41,7 @@ google-auth==2.6.6
 google-auth-oauthlib==0.4.6
 google-auth-httplib2==0.1.0
 requests==2.32.2
-werkzeug==3.0.3
+werkzeug==3.0.6
 schedule==1.2.2
 python-dotenv==1.0.1
 ```
@@ -65,7 +65,7 @@ after cloning the project.
    cd <repository-folder>
    ```
 
-3. **Environment Variables**: Create a `.env` file for Google API credentials and set up the necessary environmental variables, such as `CLIENT_ID`, `CLIENT_SECRET`, etc. Use the `xxxxxxxx-yyyyyyyyyy.json` for the appropriate service account credentials. The should be generated using [Google Cloud Platform](https://console.cloud.google.com/).
+3. **Environment Variables**: Create a `.env` file for Google API credentials and set up the necessary environmental variables, such as `CLIENT_ID`, `CLIENT_SECRET`, etc. Use the `xxxxxxxx-yyyyyyyyyy.json` for the appropriate service account credentials. These should be generated using [Google Cloud Platform](https://console.cloud.google.com/).
 
 4. **Running the Application**: Start the Flask server:
 
@@ -99,9 +99,9 @@ For the public web section of this app, the site was deployed to [PythonAnywhere
 
 ## Usage
 
-1. **Student Entry/Exit**: Students use the QR code displayed on the TV screen to access the form [`login.html`](login.html). They must select their name, action (entry or exit), and provide the password to confirm their entry or exit.
+1. **Student Entry/Exit**: Students use the QR code displayed on the TV screen to access the form [`login.html`](/templates/login.html). They must select their name, action (entry or exit), and provide the password to confirm their entry or exit.
 
-2. **Viewing Records**: Administrators can view the complete list of attendance records [`records.html`](records.html) by entering an administrative password.
+2. **Viewing Records**: Administrators can view the complete list of attendance records by entering to the spreadsheet configured.
 
 ## File Descriptions
 
