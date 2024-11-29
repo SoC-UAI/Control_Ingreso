@@ -28,6 +28,9 @@ CREDENTIALS_FILE = os.getenv("CREDENTIALS_FILE")
 # Global list to store the students inside
 estudiantes_dentro = []
 
+# Agregar la lista de tutores
+tutores = ["Ignacio Soto", "Bruno Reyes"]
+
 # Function to get the data from the Google Sheet
 def obtener_datos_hoja():
     creds = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=SCOPES)
@@ -146,7 +149,10 @@ def index():
     qr_code = generar_codigo_qr(qr_url)
 
     return render_template(
-        "index.html", estudiantes=estudiantes_dentro, qr_code=qr_code
+        "index.html",
+        estudiantes=estudiantes_dentro,
+        qr_code=qr_code,
+        tutores=tutores  # Pasar la lista de tutores al template
     )
 
 

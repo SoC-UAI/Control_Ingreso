@@ -10,8 +10,8 @@
       href="{{ url_for('static', filename='styles.css') }}"
     />
     <script>
-      // List of tutors
-      const tutors = ["Sebastián Dinator", "Bruno Reyes"];
+      // Obtener la lista de tutores desde el backend
+      const tutors = {{ tutores | tojson }};
 
       function fetchEstudiantes() {
         fetch("/estudiantes")
@@ -30,11 +30,11 @@
                 const li = document.createElement("li");
                 li.textContent = estudiante;
 
-                // Check if the student is a tutor
+                // Verificar si el estudiante es un tutor
                 if (tutors.includes(estudiante)) {
-                  li.className = "tutor"; // Apply tutor class
+                  li.className = "tutor"; // Aplicar clase de tutor
                 } else {
-                  li.className = "student"; // Apply student class
+                  li.className = "student"; // Aplicar clase de estudiante
                 }
 
                 estudiantesList.appendChild(li);
