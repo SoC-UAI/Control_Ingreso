@@ -119,3 +119,14 @@ ul li {
   font-size: 40px; /* Increase this value for a larger font size */
   z-index: 1000;
 }
+
+.version {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  color: #ffffff;
+  font-size: 14px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px 10px;
+  border-radius: 4px;
+}
