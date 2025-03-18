@@ -28,13 +28,33 @@
             } else {
               data.estudiantes.forEach((estudiante) => {
                 const li = document.createElement("li");
-                li.textContent = estudiante;
+                // Usamos position relative para posicionar elementos internos de forma absoluta y text-align center para centrar el nombre
+                li.style.position = "relative";
+                li.style.padding = "0.5rem";
+                li.style.textAlign = "center";
 
-                // Verificar si el estudiante es un tutor
+                // Creamos el span para el nombre, centrado por el text-align del li
+                const nameSpan = document.createElement("span");
+                nameSpan.textContent = estudiante;
+                nameSpan.className = "name";
+
+                li.appendChild(nameSpan);
+
+                // Si es tutor, agregamos el texto "(Encargado)" alineado a la derecha usando posicionamiento absoluto
                 if (tutors.includes(estudiante)) {
-                  li.className = "tutor"; // Aplicar clase de tutor
+                  li.className = "tutor"; // aplicar clase para estilos adicionales si se desea
+                  const encargadoSpan = document.createElement("span");
+                  encargadoSpan.textContent = " (Encargado)";
+                  encargadoSpan.className = "encargado";
+                  encargadoSpan.style.position = "absolute";
+                  encargadoSpan.style.right = "0";
+                  encargadoSpan.style.top = "50%";
+                  encargadoSpan.style.transform = "translateY(-50%)";
+                  encargadoSpan.style.marginRight = "10px";  // márgen a la derecha
+                  encargadoSpan.style.fontWeight = "bold";   // texto en negrita
+                  li.appendChild(encargadoSpan);
                 } else {
-                  li.className = "student"; // Aplicar clase de estudiante
+                  li.className = "student";
                 }
 
                 estudiantesList.appendChild(li);
@@ -73,7 +93,7 @@
     </div>
 
     <div class="version">
-      Versión 1.2.3
+      Versión 1.3.0
     </div>
 
     <script src="{{ url_for('static', filename='js/particles.min.js') }}"></script>
