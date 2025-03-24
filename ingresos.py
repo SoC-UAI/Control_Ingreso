@@ -29,7 +29,7 @@ CREDENTIALS_FILE = os.getenv("CREDENTIALS_FILE")
 estudiantes_dentro = []
 
 # Agregar la lista de tutores
-tutores = ["Ignacio Soto", "Bruno Reyes"]
+tutores = ["Ignacio Soto", "Bruno Reyes", "Bryan Alburquenque"]
 
 # Function to get the data from the Google Sheet
 def obtener_datos_hoja():
